@@ -1,0 +1,47 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+      - next
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.16.x"
+
+      - name: Cache node modules
+        id: cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run release
+
+      - name: Deploy Github Pages
+        if: github.ref == 'refs/heads/master'
+        run: npm run deploy
+        env:
+          COMMIT_SHA: ${{github.sha}}
+          RELEASE_VERSION: ${{github.ref}}
+          VERSION: ${{github.ref}}
+

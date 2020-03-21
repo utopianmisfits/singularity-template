@@ -1,0 +1,115 @@
+name: Pull Request
+
+on: pull_request
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.16.x"
+
+      - name: Cache node modules
+        id: cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Check code style with Prettier
+        run: npm run format-check
+
+      - name: Check code with ESlint
+        run: npm run lint
+
+      - name: Compile project with TypeScript
+        run: npm run type-check
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.16.x"
+
+      - name: Cache node modules
+        id: cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules # npm cache files are stored in `~/.npm` on Linux/macOS
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Test
+        run: npm run test-coverage
+
+      - name: Store Jest coverage results
+        uses: actions/upload-artifact@v1
+        with:
+          name: coverage-${{github.head_ref}}-${{github.sha}}
+          path: .coverage
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.16.x"
+
+      - name: Cache node modules
+        id: cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules # npm cache files are stored in `~/.npm` on Linux/macOS
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Build Gatsby
+        run: npm run build
+
+      - name: Store Gatsby's static files
+        uses: actions/upload-artifact@v1
+        with:
+          name: gatsby-${{github.head_ref}}-${{github.sha}}
+          path: public
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Store Storybook's static files
+        uses: actions/upload-artifact@v1
+        with:
+          name: storybook-${{github.head_ref}}-${{github.sha}}
+          path: storybook-static

@@ -1,0 +1,220 @@
+{
+  "name": "singularity-template",
+  "private": true,
+  "description": "Template for static websites made by Utopian Misfits",
+  "version": "0.1.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop",
+    "start": "npm run develop",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "deploy": "npm run build && gh-pages -d public",
+    "test": "jest",
+    "test-coverage": "jest --coverage",
+    "format": "prettier --ignore-path .gitignore --write \"**/*.{js,jsx,ts,tsx,json,md,mdx}\"",
+    "format-check": "prettier --ignore-path .gitignore \"**/*.{js,jsx,ts,tsx,json,md,mdx}\"",
+    "lint": "eslint --ignore-path .gitignore . --ext ts --ext tsx --ext js --ext jsx",
+    "lint-fix": "npm run lint -- --fix",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "release": "semantic-release"
+  },
+  "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
+    "lodash": "^4.17.15",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@storybook/addon-a11y": "^5.3.17",
+    "@storybook/addon-actions": "^5.3.17",
+    "@storybook/addon-backgrounds": "^5.3.17",
+    "@storybook/addon-console": "^1.2.1",
+    "@storybook/addon-docs": "^5.3.17",
+    "@storybook/addon-info": "^5.3.17",
+    "@storybook/addon-knobs": "^5.3.17",
+    "@storybook/addon-links": "^5.3.17",
+    "@storybook/addon-storysource": "^5.3.17",
+    "@storybook/addon-viewport": "^5.3.17",
+    "@storybook/addons": "^5.3.17",
+    "@storybook/preset-typescript": "^3.0.0-alpha.1",
+    "@storybook/react": "^5.3.17",
+    "@testing-library/jest-dom": "^5.1.1",
+    "@testing-library/react": "^10.0.1",
+    "@types/jest": "^25.1.4",
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^13.9.2",
+    "@types/react": "^16.9.25",
+    "@types/react-dom": "^16.9.5",
+    "@types/testing-library__jest-dom": "^5.0.2",
+    "@typescript-eslint/eslint-plugin": "^2.24.0",
+    "@typescript-eslint/parser": "^2.24.0",
+    "babel-jest": "^25.1.0",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-styled-components": "^1.10.7",
+    "babel-preset-gatsby": "^0.3.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-jest-dom": "^2.0.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.19.0",
+    "fork-ts-checker-webpack-plugin": "^4.1.0",
+    "gatsby": "^2.20.2",
+    "gatsby-plugin-emotion": "^4.2.0",
+    "gatsby-plugin-google-analytics": "^2.2.0",
+    "gatsby-plugin-graphql-codegen": "^2.5.0",
+    "gatsby-plugin-lodash": "^3.2.0",
+    "gatsby-plugin-manifest": "^2.3.1",
+    "gatsby-plugin-offline": "^3.1.0",
+    "gatsby-plugin-root-import": "^2.0.5",
+    "gatsby-plugin-ts": "^2.5.0",
+    "gatsby-plugin-typescript": "^2.3.0",
+    "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.8",
+    "gatsby-plugin-webpack-size": "^1.0.0",
+    "gatsby-source-graphql": "^2.2.0",
+    "gh-pages": "^2.2.0",
+    "husky": "^4.2.3",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^25.1.0",
+    "lint-staged": "^10.0.8",
+    "prettier": "^2.0.1",
+    "react-docgen-typescript-loader": "^3.7.1",
+    "react-is": "^16.13.1",
+    "semantic-release": "^17.0.4",
+    "ts-jest": "^25.2.1",
+    "ts-loader": "^6.2.1",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
+    "typescript": "^3.8.3",
+    "webpack-merge": "^4.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:utopianmisfits/singularity-template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/utopianmisfits/singularity-template/issues"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,md,mdx,json}": [
+      "npm run format"
+    ],
+    "*.{ts,tsx,js,jsx}": [
+      "npm run lint-fix -- --cache"
+    ],
+    "*.test.{ts,tsx}": [
+      "npm run test"
+    ]
+  },
+  "release": {
+    "branches": [
+      "master",
+      "next"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "header-max-length": [
+        0,
+        "always",
+        50
+      ],
+      "body-max-line-length": [
+        0,
+        "always",
+        72
+      ]
+    }
+  },
+  "prettier": {
+    "trailingComma": "all"
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "plugin:@typescript-eslint/recommended",
+      "prettier/@typescript-eslint",
+      "plugin:prettier/recommended"
+    ],
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    },
+    "env": {
+      "browser": true,
+      "node": true,
+      "es6": true
+    },
+    "plugins": [
+      "@typescript-eslint",
+      "react"
+    ],
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "ecmaVersion": 2018,
+      "sourceType": "module"
+    },
+    "rules": {
+      "react/prop-types": "off"
+    },
+    "overrides": [
+      {
+        "files": [
+          "*.js"
+        ],
+        "rules": {
+          "@typescript-eslint/no-var-requires": "off",
+          "@typescript-eslint/explicit-function-return-type": "off"
+        }
+      },
+      {
+        "files": [
+          "**/*.test.tsx",
+          "**/__mocks__/*.js",
+          "**/support/jest/*.js"
+        ],
+        "env": {
+          "jest": true
+        },
+        "plugins": [
+          "jest-dom"
+        ],
+        "extends": [
+          "plugin:jest-dom/recommended"
+        ]
+      },
+      {
+        "files": [
+          "**/*.stories.tsx"
+        ],
+        "rules": {
+          "@typescript-eslint/explicit-function-return-type": "off"
+        }
+      }
+    ]
+  },
+  "jest": {
+    "preset": "<rootDir>/support/jest"
+  }
+}
